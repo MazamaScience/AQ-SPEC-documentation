@@ -13,10 +13,12 @@ to reflect changes in the software and so that all changes can be tracked.
 
 Current contents include:
 
-* [README.md](README.md) -- this document
-* [Deployment_Instructions.md](Deployment_Instructions.md) -- detailed deployment instructions targeted to a 
-Microsoft Azure instance
-* [Software_Design_Document.md](Software_Design_Document.md) -- Overview of software system components
-* [Windows_Installation.md](Windows_Installation.md) -- Instructions for setting up the **AirSensor** R
-package on Windows.
+* [README.md](README.md) -- 
+this document
+* [Deployment_Instructions.md](Deployment_Instructions.md) -- 
+detailed deployment instructions targeted to a Microsoft Azure instance
+* [Software_Design_Document.md](Software_Design_Document.md) -- 
+Overview of software system components
+* [Windows_Installation.md](Windows_Installation.md) -- 
+Instructions for setting up the **AirSensor** R package on Windows.
 
