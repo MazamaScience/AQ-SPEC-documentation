@@ -106,7 +106,7 @@ containers. This level of virtualization allows containers and scripts to be
 loaded onto a system that has none of the other software dependencies required
 to run R.
 
-The package source code incluces a `docker/` directory with the following 
+The package source code includes a `docker/` directory with the following 
 contents:
 
 ```
@@ -164,7 +164,7 @@ named files in predictable directory locations. Besides the operating system, no
 other "database" is required.
 
 R package functions assume the following directory structure will be available 
-at some web accessible  `AirSensorBaseUrl`.
+at some web accessible  `archiveBaseUrl`.
 
 ```
 ├── airsensor

@@ -15,10 +15,10 @@ Current contents include:
 
 * [README.md](README.md) -- 
 this document
-* [Deployment_Instructions.md](Deployment_Instructions.md) -- 
-detailed deployment instructions targeted to a Microsoft Azure instance
 * [Software_Design_Document.md](Software_Design_Document.md) -- 
 Overview of software system components
+* [Deployment_Instructions.md](Deployment_Instructions.md) -- 
+detailed deployment instructions targeted to a Microsoft Azure instance
 * [Windows_Installation.md](Windows_Installation.md) -- 
-Instructions for setting up the **AirSensor** R package on Windows.
+Instructions for setting up RStudio and the **AirSensor** R package on Windows.
 
