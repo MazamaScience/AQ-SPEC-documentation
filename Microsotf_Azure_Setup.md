@@ -159,6 +159,91 @@ az vm deallocate -g ubuntu_trial -n UbuntuTrial02
 ...
 ```
 
+### Set up VM with apache
+
+https://docs.microsoft.com/en-us/azure/virtual-machines/linux/tutorial-lamp-stack
+
+```
+az group create --name mazamaResourceGroup --location eastus
+{
+  "id": "/subscriptions/1956f76b-9cae-48b8-bb62-341ce47bdccb/resourceGroups/mazamaResourceGroup",
+  "location": "eastus",
+  "managedBy": null,
+  "name": "mazamaResourceGroup",
+  "properties": {
+    "provisioningState": "Succeeded"
+  },
+  "tags": null,
+  "type": null
+}
+```
+
+```
+az vm create -g mazamaResourceGroup -n UbuntuTrial01 --image UbuntuLTS
+{
+  "fqdns": "",
+  "id": "/subscriptions/1956f76b-9cae-48b8-bb62-341ce47bdccb/resourceGroups/mazamaResourceGroup/providers/Microsoft.Compute/virtualMachines/UbuntuTrial01",
+  "location": "eastus",
+  "macAddress": "00-0D-3A-1D-17-3F",
+  "powerState": "VM running",
+  "privateIpAddress": "10.0.0.4",
+  "publicIpAddress": "40.71.222.162",
+  "resourceGroup": "mazamaResourceGroup",
+  "zones": ""
+}
+```
+
+```
+az vm open-port --port 80 -g mazamaResourceGroup -n UbuntuTrial01
+...
+az network public-ip list -g mazamaResourceGroup --query [].ipAddress
+```
+
+**Install Make and Apache**
+
+https://tutorials.ubuntu.com/tutorial/install-and-configure-apache#0
+
+```
+ssh ipAddress
+sudo apt update
+sudo apt install make      
+sudo apt install make-guile
+sudo apt install apache2
+```
+
+https://www.digitalocean.com/community/tutorials/how-to-install-the-apache-web-server-on-ubuntu-18-04-quickstart
+
+Adjust the firewall
+
+```
+sudo ufw allow 'Apache'
+sudo ufw status
+sudo systemctl status apache2
+```
+
+Go to http://40.71.222.162 to verify it all works. Yay!
+
+**Install docker**
+
+https://phoenixnap.com/kb/how-to-install-docker-on-ubuntu-18-04
+
+(or https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-on-ubuntu-18-04)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ### Creating a VM from a template
 
 https://azure.microsoft.com/en-us/resources/templates/docker-simple-on-ubuntu/
