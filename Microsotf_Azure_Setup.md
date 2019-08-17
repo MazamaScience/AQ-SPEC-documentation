@@ -1,6 +1,6 @@
 # Microsotf_Azure_Setup.md
 
-## Install From Web Interface
+## Create a VM From the Web Interface
 
 Go to https://portal.azure.com and log in
 
@@ -95,77 +95,78 @@ From Dashboard for UbuntuTrial01 click on "Export Template" and then "Download".
 The `template.json`, `parameters.json` and `deploy.sh` files should allow 
 setup from the command line.
 
-### Install Make and Apache
+## Provision the Virtual Machine
+
+### Log in to the VM from a terminal
+
+```
+ssh <ip address>
+```
+
+The rest of the instructions are to be typed at the VM prompt.
+
+### Install `make`
 
 https://tutorials.ubuntu.com/tutorial/install-and-configure-apache#0
 
 ```
-ssh ipAddress
 sudo apt update
-sudo apt install make      
-###sudo apt install make-guile
-sudo apt install apache2
+sudo apt install make 
 ```
 
-https://www.digitalocean.com/community/tutorials/how-to-install-the-apache-web-server-on-ubuntu-18-04-quickstart
-
-Adjust the firewall
+### Install Mazama Science Repositories
 
 ```
-sudo ufw allow 'Apache'
-sudo ufw status
-sudo systemctl status apache2
+sudo git clone https://github.com/MazamaScience/AirSensor.git
+sudo git clone https://github.com/MazamaScience/AirSensorShiny.git
+sudo git clone https://github.com/MazamaScience/AQ-SPEC-documentation.git
 ```
 
-Go to http://40.71.222.162 to verify it all works. Yay!
-
-**Install docker**
-
-https://phoenixnap.com/kb/how-to-install-docker-on-ubuntu-18-04
-
-(or https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-on-ubuntu-18-04)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-### Creating a VM from a template
-
-https://azure.microsoft.com/en-us/resources/templates/docker-simple-on-ubuntu/
+### Set up Docker and Apache
 
 ```
-# use this command when you need to create a new resource group for your deployment
-az group create --name <resource-group-name> --location <resource-group-location> 
-
-# deploy a VM from a template 
-az group deployment create --resource-group <my-resource-group> --template-uri https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/docker-simple-on-ubuntu/azuredeploy.json
+cd AQ-SPEC-documentation; make all
 ```
 
-First attempt:
+At this point you have to log out and back in again for permission settings to
+be updated.
 
 ```
-$ az group deployment create --resource-group ubuntu_trial --template-uri https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/docker-simple-on-ubuntu/azuredeploy.json
-Please provide string value for 'adminUsername' (? for help): mazama_azure
-Please provide string value for 'dnsNameForPublicIP' (? for help): ubuntudocker01
-Please provide securestring value for 'adminPasswordOrKey' (? for help): <MazamaScienceAzure2019!>
+exit
 ...
-Deployment failed. Correlation ID: 7a746ee8-6eaf-493f-a94b-ad70813c5d56. {
-  "error": {
-    "code": "InvalidParameter",
-    "message": "The value of parameter linuxConfiguration.ssh.publicKeys.keyData is invalid.",
-    "target": "linuxConfiguration.ssh.publicKeys.keyData"
-  }
-}
+ssh <ip address>
 ```
+
+## Set up Data Processing
+
+### Build docker images
+
+```
+cd ~/AirSensor/docker; make production_build
+```
+
+Test with:
+
+```
+mazama_azure@UbuntuTrial02:~/AirSensor/docker$ docker images
+REPOSITORY                 TAG                 IMAGE ID            CREATED             SIZE
+mazamascience/airsensor    0.4.0               675aa990bc1f        2 minutes ago       2.81GB
+mazamascience/airsensor    latest              675aa990bc1f        2 minutes ago       2.81GB
+mazamascience/pwfslsmoke   1.2.100             23643a55c6d9        4 weeks ago         2.62GB
+```
+
+### Set up cron jobs
+
+```
+cd ~/AirSensor/local_executables; make install
+```
+
+Test with:
+
+```
+crontab -l
+```
+
+
+
 
