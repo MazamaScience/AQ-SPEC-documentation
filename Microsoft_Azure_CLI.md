@@ -95,16 +95,120 @@ From Dashboard for UbuntuTrial01 click on "Export Template" and then "Download".
 The `template.json`, `parameters.json` and `deploy.sh` files should allow 
 setup from the command line.
 
-### Install Make and Apache
+## Install from Azure Command Line Interface
+
+
+### Install the Azure CLI
+
+https://docs.microsoft.com/en-us/cli/azure/install-azure-cli
+
+Try to install on MacOS using Linux instructions.
+
+_(Looks like this is going to get messy as we exclusively use MacPorts and not
+Homebrew.)_
+
+First install python 3.6.3 with `pyenv install 3.6.3`
+
+Create directory, set default python:, get CLI installation script:
+
+```
+~/Projects/MS_Azure/SCAQMD
+pyenv local 3.6.3
+wget https://aka.ms/InstallAzureCli
+```
+
+Run the script:
+
+```
+bash InstallAzureCLI
+```
+
+Restart shell as recommended and now we have access to the `az` command!
+
+Example usage:
+
+```
+az
+...
+az group --help
+...
+az group list
+...
+az group show --name ubuntu_trial
+...
+```
+
+Always begin with `az login` which will open up a browser.
+
+## Simplest possible setup
+
+https://docs.microsoft.com/en-us/azure/virtual-machines/scripts/virtual-machines-linux-cli-sample-create-vm-quick-create
+
+```
+az vm create --resource-group ubuntu_trial --name UbuntuTrial02 --image UbuntuLTS
+```
+
+Yay!!
+
+And now to delete everything:
+
+```
+az vm stop --resource-group ubuntu_trial --name UbuntuTrial02
+...
+az vm deallocate -g ubuntu_trial -n UbuntuTrial02
+...
+```
+
+### Set up VM with apache
+
+https://docs.microsoft.com/en-us/azure/virtual-machines/linux/tutorial-lamp-stack
+
+```
+az group create --name mazamaResourceGroup --location eastus
+{
+  "id": "/subscriptions/1956f76b-9cae-48b8-bb62-341ce47bdccb/resourceGroups/mazamaResourceGroup",
+  "location": "eastus",
+  "managedBy": null,
+  "name": "mazamaResourceGroup",
+  "properties": {
+    "provisioningState": "Succeeded"
+  },
+  "tags": null,
+  "type": null
+}
+```
+
+```
+az vm create -g mazamaResourceGroup -n UbuntuTrial01 --image UbuntuLTS
+{
+  "fqdns": "",
+  "id": "/subscriptions/1956f76b-9cae-48b8-bb62-341ce47bdccb/resourceGroups/mazamaResourceGroup/providers/Microsoft.Compute/virtualMachines/UbuntuTrial01",
+  "location": "eastus",
+  "macAddress": "00-0D-3A-1D-17-3F",
+  "powerState": "VM running",
+  "privateIpAddress": "10.0.0.4",
+  "publicIpAddress": "40.71.222.162",
+  "resourceGroup": "mazamaResourceGroup",
+  "zones": ""
+}
+```
+
+```
+az vm open-port --port 80 -g mazamaResourceGroup -n UbuntuTrial01
+...
+az network public-ip list -g mazamaResourceGroup --query [].ipAddress
+```
+
+**Install Make and Apache**
 
 https://tutorials.ubuntu.com/tutorial/install-and-configure-apache#0
 
 ```
 ssh ipAddress
 sudo apt update
-sudo apt install make      
-###sudo apt install make-guile
-sudo apt install apache2
+sudo apt install --assume-yes make      
+###sudo apt install --assume-yes make-guile
+sudo apt install --assume-yes apache2
 ```
 
 https://www.digitalocean.com/community/tutorials/how-to-install-the-apache-web-server-on-ubuntu-18-04-quickstart
