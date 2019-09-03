@@ -1,6 +1,13 @@
+---
+output:
+  pdf_document: 
+    latex_engine: xelatex
+  word_document: default
+  html_document: default
+---
 # Software Design Document 
 
-**_Updated 2019-08-12_**
+**_Updated 2019-09-03_**
 
 This document describes the overall design and maintenance of a web accessible
 archive of data from SCAQMD-maintained Purple Air sensors as well as the design
@@ -8,7 +15,7 @@ and deployment of an [R Shiny application](https://shiny.rstudio.com) providing
 web accessible products and user interfaces appropriate for dissemination to the 
 public.
 
-software systems were created by Mazama Science for the 
+Software systems were created by Mazama Science for the 
 [Sensor Performance and Evaluation Center](http://www.aqmd.gov/aq-spec) 
 at the [South Coast Air Quality Managment District](http://www.aqmd.gov).
 
@@ -35,20 +42,30 @@ which is proxied through Apache.
 Both the archive scripts and the R Shiny Server are run inside docker containers
 so that host machine provisioning is limited to: `apache`, `git` and `docker`.
 
-As envisioned, data ingest, data archive and R Shiny Server will all run on a
-single, SCAQMD maintained, Microsoft Azure instance. However, if required for 
-redundancy, load or general optimization, it would be very straightforward to 
-partitiion data processing, data archive and public interface onto separate 
-Azure instances.
+As envisioned, data ingest, data archive and R Shiny Server can all run on a
+single, SCAQMD maintained, Microsoft Azure instance. However, for purposes of
+load and process optimization, it is recommended that the data  processing and 
+data archive be set up one one Azure instance while the public  interface be set 
+up on a separate Azure instance.
 
+Data processing is of critical imprtance and will occur at well defined
+intervals so that it may be possible configure an instance tailored to the CPU
+and memory needs of these proceses.
+
+The public facing user interface is by nature much more volatile in terms of its
+CPU load and should be set up so as not to interfere with the core data
+processing tasks.
+
+That said, a single, medium capacity instance should be able to handle both 
+tasks under low user load situations.
 
 ## Data flow
 
 Files in the data archive contain data at three distinct levels:
 
-* synoptic data containing primarily sensor metadata for every Puruple Air sensor
-* time series data containing raw Purple Air sensor data
-* hourly aggregated data containing processed time series data
+* _synoptic data_ containing primarily sensor metadata for every Purple Air sensor
+* _time series data_ containing raw Purple Air sensor data
+* _hourly aggregated data_ containing processed time series data
 
 Data ingest begins by downloading, parsing and enhancing data found in a geojson
 file at https://www.purpleair.com/json. Data ingest is performed hourly by a 
@@ -58,16 +75,16 @@ referred to as `pas` (Purple Air Synoptic) files.
 In the second stage of data processing, metadata from the synoptic file is used 
 to download, parse and enhance raw timeseries data obtained from the 
 ThingSpeak server at https://api.thingspeak.com/channels/. This data processing 
-is performed again performed houly by a data processing script. The timeseries
+is performed hourly by a data processing script. The timeseries
 data files are referred to as `pat` (Purple Air Timeseries) files.
 
-A more detailed discussion of data access APIs is available at:
+A more detailed discussion of raw data access APIs is available at:
 https://www2.purpleair.com/community/faq.
 
 The final stage of data processing involves ingesting timeseries data from
 the SCAQMD archive and creating quality controlled, hourly aggregated data
 files containing all sensor data in a single file. The files are compatible
-with capabilities found in the **PWFSLSmoke** package and allow for comparison
+with the **PWFSLSmoke** package and allow for comparison
 with federal monitoring data. This data processing is again performed by a
 dedicated processing script run hourly by a cron job. The hourly aggregated
 data files are referred to as `airsensor` files.
@@ -90,9 +107,10 @@ to be made public.)_**
 The **AirSensor** R package provides all of the component functionality from
 which data ingest scripts and user interfaces are built.
 
-Using the open source version of 
-[RStudio](https://www.rstudio.com/products/rstudio/), the package can be
-loaded and used to analyze data or modified and rebuilt.
+Using the open source version of the
+[RStudio](https://www.rstudio.com/products/rstudio/) IDE, the package can be
+loaded and used by data analysists to work with Purple Air data on their 
+desktop and laptop machines.
 
 ### Docker containers
 
@@ -101,7 +119,7 @@ _For background on Docker, see:_
 * https://en.wikipedia.org/wiki/Docker_(software)
 * https://www.docker.com
 
-All data proceessing is performed by scripts running inside of docker
+All data processing is performed by scripts running inside of docker
 containers. This level of virtualization allows containers and scripts to be
 loaded onto a system that has none of the other software dependencies required
 to run R.
@@ -147,9 +165,9 @@ Each of the `~_exec.R` scripts is run on a daily schedule defined by
 `crontab_daily.txt`. The `crontab_archive.txt` file can be used to set up
 cron jobs to build up an archive of data files starting in January of 2018.
 
-To deploy the data ingest scripts, he contents of these files should be 
-modified if necessary to reflect absolute paths and then added to a privileged 
-user's crontab so the scripts will be run on a daily basis.
+To deploy the data ingest scripts, the contents of these files should be 
+modified if necessary to reflect absolute paths on the host machine and then 
+added to a privileged user's crontab so the scripts will be run on a daily basis.
 
 The `test/` directory contains a `Makefile` that allows someone typing at the
 command line to test the data ingest scripts by running them inside the docker
@@ -158,13 +176,13 @@ cron job to run scripts automatically.
 
 ### Data directory
 
-The data archive consists of flat-file archive system using R binary files 
+The data archive is a flat-file archive system using R binary files 
 containing Purple Air data. The API to this data archive consists of carefully
 named files in predictable directory locations. Besides the operating system, no 
 other "database" is required.
 
-R package functions assume the following directory structure will be available 
-at some web accessible  `archiveBaseUrl`.
+R package functions inside the **AirSensor** package assume the following 
+directory structure will be available at some web accessible  `archiveBaseUrl`.
 
 ```
 ├── airsensor
@@ -182,7 +200,7 @@ at some web accessible  `archiveBaseUrl`.
     └── 2019
 ```
 
-The `pas` files are generated every hour with filenames similar to:
+The `pas` files are generated every hour with file names similar to:
 
 ```
 pas/2019/pas_20190627.rda
@@ -195,7 +213,7 @@ a given `YYYYmmddHH` timestamp. The file with the `YYYYmmdd` timestamp contains
 the same data as the most recent hourly file for that date.
 
 The `pat` files are generated once per day for each individual SCAQMD sensor
-and contain data for an entire month. Thay have filenames like:
+and contain data for an entire month. They have file names like:
 
 ```
 pat/2019/pat_SCAH_04_201901.rda
@@ -204,7 +222,7 @@ pat/2019/pat_SCAH_07_201901.rda
 ```
 
 The `pat/latest/` subdirectory contains files that are updated hourly and contain 
-one week of data per sensor. The have filenames like:
+one week of data per sensor. The have file names like:
 
 ```
 pat/latest/pat_SCAH_04_latest7.rda
