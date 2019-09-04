@@ -69,8 +69,8 @@ create_archive_dirs:
 	sudo mkdir -p /var/www/html/data/PurpleAir/videos/2018
 	sudo mkdir -p /var/www/html/data/PurpleAir/videos/2019
 
-#install_archive_dirs:
-#	sudo wget --no-parent -r http://smoke.mazamascience.com/data/PurpleAir
+#install_data_archive:
+#	sudo wget --directory-prefix /var/www/html/data/ --no-parent --no-host-directories --cut-dirs=1 --recursive http://smoke.mazamascience.com/data/PurpleAir
 
 
 all: update_repositories install_docker install_apache create_archive_dirs

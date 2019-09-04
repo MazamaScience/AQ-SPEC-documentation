@@ -11,6 +11,8 @@ Here's how https://docs.microsoft.com/en-us/azure/backup/backup-azure-vms-first-
 
 ## Useful Links
 
+* https://docs.microsoft.com/en-us/azure/virtual-machines/linux/quick-create-portal
+* https://docs.microsoft.com/en-us/azure/virtual-machines/linux/attach-disk-portal
 * https://github.com/Azure/azure-quickstart-templates/tree/master/docker-simple-on-ubuntu
 * https://github.com/Azure/azure-quickstart-templates/tree/master/apache2-on-ubuntu-vm
 * https://docs.microsoft.com/en-us/cli/azure/install-azure-cli

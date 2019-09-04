@@ -1,4 +1,4 @@
-# Microsotf_Azure_Setup.md
+# Microsotf Azure Setup for Data Processing
 
 ## Create a VM From the Web Interface
 
@@ -8,32 +8,42 @@ Click on "Virtual machines"
 
 Click on "Add" or "Create a Virtual Machine"
 
-### Bsics
+### Basics
 
 * Subscription: Free Trial
-* Resource group: ubuntu_trial
+* Resource group: ubuntu_trial (Create new if needed)
 
 * Virtual machine name: UbuntuTrial01
 * Region: East <required to get the Free Trial>
-* Availaability options: No ... redundancy required
+* Availaability options: No infrastructure redundancy required
 * Image: Ubuntu Server 18.04 LTS
-* Size: Standard D2s v3
+* Size: Standard D2s v3 (2 vcpus, 8GiB memory)
+
+RSA Alternative:
+
+* Username: jonathan
+* SSH public key: (contents of .ssh/id_rsa.pub) 
+
+Password Alternative:
 
 * Authentication type: Password
-* Username: mazama_azure
+* Username: mazama_admin
 * Password: MazamaScienceAzure2019!
 
 * Public inbound ports: Allow selected ports
-* Selected inbound ports: HTTP, HTTPS, SSH
+* Selected inbound ports: HTTP, SSH
 
 ### Disks
 
-* OS disk type: Premium 
-* Data disks: Create a new disk
+* OS disk type: Premium SSD
+* Advanced: Use managed disks -- Yes; Use ephemeral OS disk -- No
+* Data disks: Create and attach a new disk
 
 * Name: UbuntuTrial01_DataDisk_0
 * Source type: None
 * Size: 1023 GiB (Premium SSD)
+
+Click "OK" button
 
 * LUN: 0; NAME; SIZE; DIST TYPE HOST CACHING: None
 
@@ -61,11 +71,17 @@ Click on "Add" or "Create a Virtual Machine"
 * Auto-shutdown: Off
 * Backup: Off
 
+### Advanced
+
+Nothing
+
 ### Tags
 
-* Name: client; Value: SCAQMD
+Nothing
 
 ### Review and create
+
+Click "Create"
 
 Validation passed -- 0.0960 USD/hr
 
@@ -81,19 +97,13 @@ Various things appear:
 * UbuntuTrial01-nsg -- networkSecurityGroups
 * ubuntu_trial-vnet -- virtualNetworks
 
-"Go to resource"
+Click "Go to resource"
 
-Using "Public IP address" and the "MazamaScienceBellevue2019!" password
+----
 
-```
-ssh mazama_admin@13.92.141.166
-```
+> Setup is now finished. From here on, provisioning takes place in the instance.
 
-VM already had vim, git, top, uptime, free, etc. but not docker.
-
-From Dashboard for UbuntuTrial01 click on "Export Template" and then "Download".
-The `template.json`, `parameters.json` and `deploy.sh` files should allow 
-setup from the command line.
+----
 
 ## Provision the Virtual Machine
 
@@ -103,7 +113,13 @@ setup from the command line.
 ssh <ip address>
 ```
 
+Our VM already has `vim`, `git`, `top`, `uptime`, `free`, etc. but not `docker`.
+
 The rest of the instructions are to be typed at the VM prompt.
+
+### Mount external disk
+
+https://docs.microsoft.com/en-us/azure/virtual-machines/linux/attach-disk-portal
 
 ### Install `make`
 
@@ -150,12 +166,25 @@ Test with:
 ```
 mazama_azure@UbuntuTrial02:~/AirSensor/docker$ docker images
 REPOSITORY                 TAG                 IMAGE ID            CREATED             SIZE
-mazamascience/airsensor    0.4.0               675aa990bc1f        2 minutes ago       2.81GB
+mazamascience/airsensor    0.4.3               675aa990bc1f        2 minutes ago       2.81GB
 mazamascience/airsensor    latest              675aa990bc1f        2 minutes ago       2.81GB
 mazamascience/pwfslsmoke   1.2.100             23643a55c6d9        4 weeks ago         2.62GB
 ```
 
+### Install data archives
+
+The current data archive exists on the Mazama Science server and can be
+installed at `/var/www/html/data/PurpleAir` with:
+
+```
+cd ~/AQ-SPEC-documentation; make install_data_archive
+```
+
+This will take a fairly long time.ff
+
 ### Set up cron jobs
+
+**TODO**
 
 ```
 cd ~/AirSensor/local_executables; make install
