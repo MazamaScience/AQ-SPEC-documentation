@@ -31,7 +31,7 @@ The overall system consists of the following modular components:
  Air data and data products
 
 The data archive consists of a set of flat files with URLs defined by a simple
-protocol.
+directory and file naming protocol.
 
 The data ingest scripts are written in R and are run at regular intervals by
 the system cron job.
@@ -42,10 +42,10 @@ which is proxied through Apache.
 Both the archive scripts and the R Shiny Server are run inside docker containers
 so that host machine provisioning is limited to: `apache`, `git` and `docker`.
 
-As envisioned, data ingest, data archive and R Shiny Server can all run on a
+As envisioned, data ingest, data archive and R Shiny Server could all run on a
 single, SCAQMD maintained, Microsoft Azure instance. However, for purposes of
-load and process optimization, it is recommended that the data  processing and 
-data archive be set up one one Azure instance while the public  interface be set 
+load and process optimization, it is recommended that the data processing and 
+data archive be set up one one Azure instance while the public interface be set 
 up on a separate Azure instance.
 
 Data processing is of critical imprtance and will occur at well defined
@@ -56,7 +56,7 @@ The public facing user interface is by nature much more volatile in terms of its
 CPU load and should be set up so as not to interfere with the core data
 processing tasks.
 
-That said, a single, medium capacity instance should be able to handle both 
+That said, a single, medium capacity instance may be able to handle both 
 tasks under low user load situations.
 
 ## Data flow
@@ -66,6 +66,7 @@ Files in the data archive contain data at three distinct levels:
 * _synoptic data_ containing primarily sensor metadata for every Purple Air sensor
 * _time series data_ containing raw Purple Air sensor data
 * _hourly aggregated data_ containing processed time series data
+* _video files_ contianing 7-day mp4 files for each distinct _community_
 
 Data ingest begins by downloading, parsing and enhancing data found in a geojson
 file at https://www.purpleair.com/json. Data ingest is performed hourly by a 
@@ -81,13 +82,16 @@ data files are referred to as `pat` (Purple Air Timeseries) files.
 A more detailed discussion of raw data access APIs is available at:
 https://www2.purpleair.com/community/faq.
 
-The final stage of data processing involves ingesting timeseries data from
+The third stage of data processing involves ingesting timeseries data from
 the SCAQMD archive and creating quality controlled, hourly aggregated data
 files containing all sensor data in a single file. The files are compatible
 with the **PWFSLSmoke** package and allow for comparison
 with federal monitoring data. This data processing is again performed by a
 dedicated processing script run hourly by a cron job. The hourly aggregated
 data files are referred to as `airsensor` files.
+
+Another R script is run once per day and uses the `airsensor` files to produce
+.mp4 video files fore ach community.
 
 ## Components
 
@@ -204,13 +208,15 @@ The `pas` files are generated every hour with file names similar to:
 
 ```
 pas/2019/pas_20190627.rda
-pas/2019/pas_2019062800.rda
-pas/2019/pas_2019062801.rda
+pas/2019/pas_20190627_archival.rda
+pas/2019/pas_20190628.rda
+pas/2019/pas_20190628_archival.rda
 ```
 
 Each file contains synoptic data for all US Purple Air sensors reporting for
-a given `YYYYmmddHH` timestamp. The file with the `YYYYmmdd` timestamp contains
-the same data as the most recent hourly file for that date.
+a given `YYYYmmdd` timestamp. These files contain metadata for all sensors that
+have reported within the last 24 hours. The files with `_archival` contain
+metadata for all sensors including those that have stopped reporting.
 
 The `pat` files are generated once per day for each individual SCAQMD sensor
 and contain data for an entire month. They have file names like:
@@ -240,11 +246,12 @@ airsensor/2019/airsensor_scaqmd_201902.rda
 airsensor/2019/airsensor_scaqmd_201903.rda
 ```
 
-The `airsensor/latest` subdirectory contains a file that is updated hourly and
-contain one week of data:
+The `airsensor/latest` subdirectory contains files that are updated hourly and
+contain either 7 or 45 days of data:
 
 ```
 airsensor/latest/airsensor_scaqmd_latest7.rda
+airsensor/latest/airsensor_scaqmd_latest45.rda
 ```
 
 The `createVideo_exec.R` script is run once daily to populate generate 7-day
@@ -259,7 +266,7 @@ SCAH_20190804.mp4
 
 ### R Shiny application
 
-A simple, web based user interface was created allowing end users to generate 
+A full-featured, web based user interface was created allowing end users to generate 
 plots of recent data for specific Purple Air sensors. Our technology of choice
 was to build an [R Shiny](https://www.rstudio.com/products/shiny/) application
 and to host it using [R Shiny Server](https://www.rstudio.com/products/shiny-2/).

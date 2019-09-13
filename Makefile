@@ -7,8 +7,6 @@ update_repositories:
 
 # From https://phoenixnap.com/kb/how-to-install-docker-on-ubuntu-18-04
 install_docker:
-	# Update Software Repositories
-	###sudo apt --assume-yes update
 	# Uninstall Old Versions of Docker
 	sudo apt --assume-yes remove docker docker-engine docker.io 
 	# Install Docker    
@@ -23,8 +21,6 @@ install_docker:
 
 # From https://phoenixnap.com/kb/how-to-install-docker-on-ubuntu-18-04
 install_official_docker:
-	# Update Software Repositories
-	###sudo apt --assume-yes update
 	# Download Dependencies
 	sudo apt --assume-yes install sudo apt --assume-yes-transport-https ca-certificates curl software-properties-common
 	# Add Docker’s GPG Key    
@@ -43,8 +39,6 @@ install_official_docker:
 
 # From https://www.digitalocean.com/community/tutorials/how-to-install-the-apache-web-server-on-ubuntu-18-04-quickstart
 install_apache:
-	# Update Software Repositories
-	###sudo apt --assume-yes update
 	# Install Apache
 	sudo apt --assume-yes install apache2
 	# Adjust the Firewall
