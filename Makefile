@@ -1,6 +1,5 @@
 ################################################################################
 # Makefile for provisioning Ubuntu 18.04 with Docker and Apache
-#
 
 update_repositories:
 	sudo apt --assume-yes update
@@ -50,29 +49,36 @@ install_apache:
 	# Start Apache
 	sudo systemctl restart apache2
 
-create_archive_dirs:
-	sudo mkdir -p /var/www/html/data/PurpleAir/airsensor/2018
-	sudo mkdir -p /var/www/html/data/PurpleAir/airsensor/2019
-	sudo mkdir -p /var/www/html/data/PurpleAir/airsensor/latest
-	sudo mkdir -p /var/www/html/data/PurpleAir/logs
-	sudo mkdir -p /var/www/html/data/PurpleAir/pas/2018
-	sudo mkdir -p /var/www/html/data/PurpleAir/pas/2019
-	sudo mkdir -p /var/www/html/data/PurpleAir/pat/2018
-	sudo mkdir -p /var/www/html/data/PurpleAir/pat/2019
-	sudo mkdir -p /var/www/html/data/PurpleAir/pat/latest
-	sudo mkdir -p /var/www/html/data/PurpleAir/videos/2018
-	sudo mkdir -p /var/www/html/data/PurpleAir/videos/2019
-
-#install_data_archive:
-#	sudo wget --directory-prefix /var/www/html/data/ --no-parent --no-host-directories --cut-dirs=1 --recursive http://smoke.mazamascience.com/data/PurpleAir
-
-
-all: update_repositories install_docker install_apache create_archive_dirs
+setup: update_repositories install_docker install_apache
 	@echo ""
 	@echo "All Done!"
 	@echo ""
 	@echo "Please log out and back in before continuing"
 	@echo ""
+
+################################################################################
+# Targets for the data archive under /var/www/html/data
+
+create_archive_dirs:
+	sudo mkdir -p /var/www/html/data/PurpleAir/airsensor/2018
+	sudo mkdir -p /var/www/html/data/PurpleAir/airsensor/2019
+	sudo mkdir -p /var/www/html/data/PurpleAir/airsensor/2020
+	sudo mkdir -p /var/www/html/data/PurpleAir/airsensor/latest
+	sudo mkdir -p /var/www/html/data/PurpleAir/logs
+	sudo mkdir -p /var/www/html/data/PurpleAir/pas/2018
+	sudo mkdir -p /var/www/html/data/PurpleAir/pas/2019
+	sudo mkdir -p /var/www/html/data/PurpleAir/pas/2020
+	sudo mkdir -p /var/www/html/data/PurpleAir/pat/2018
+	sudo mkdir -p /var/www/html/data/PurpleAir/pat/2019
+	sudo mkdir -p /var/www/html/data/PurpleAir/pat/2020
+	sudo mkdir -p /var/www/html/data/PurpleAir/pat/latest
+	sudo mkdir -p /var/www/html/data/PurpleAir/videos/2018
+	sudo mkdir -p /var/www/html/data/PurpleAir/videos/2019
+	sudo mkdir -p /var/www/html/data/PurpleAir/videos/2020
+
+#install_data_archive:
+#	sudo wget --directory-prefix /var/www/html/data/ --no-parent --no-host-directories --cut-dirs=1 --recursive http://smoke.mazamascience.com/data/PurpleAir
+
 
 
 
