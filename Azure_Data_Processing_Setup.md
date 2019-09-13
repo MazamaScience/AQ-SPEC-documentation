@@ -1,4 +1,11 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
 # Microsotf Azure Setup for Data Processing
+
+**_Updated 2019-09-13_**
 
 ## Create a VM From the Web Interface
 
@@ -100,9 +107,8 @@ Various things appear:
 When everything is finished: Click "Go to resource"
 
 ----
-
-> Setup is now finished. From here on, provisioning takes place in the instance.
-
+> Setup of the VM is now finished. 
+> From here on, provisioning takes place inside the instance.
 ----
 
 ## Provision the Virtual Machine
@@ -136,7 +142,8 @@ sudo git clone https://github.com/MazamaScience/AirSensor.git
 ### Set up Docker and Apache
 
 ```
-cd AQ-SPEC-documentation; make setup
+cd AQ-SPEC-documentation
+make setup
 ```
 
 At this point you have to log out and back in again for permission settings to
@@ -200,13 +207,15 @@ UUID=<uuid-from-blkid-cmd> /var/www/html/data    xfs    defaults    0 0
 Begin by creating the archive directory structure under `/var/www/html/data`:
 
 ```
-cd ~/AQ-SPEC-documentation; make create_archive_dirs
+cd ~/AQ-SPEC-documentation
+sudo make create_archive_dirs
 ```
 
 ### Build docker images
 
 ```
-cd ~/AirSensor/docker; make production_build
+cd ~/AirSensor/docker
+sudo make production_build
 ```
 
 _... This will take some time ..._
@@ -223,51 +232,99 @@ mazamascience/pwfslsmoke   1.2.100             23643a55c6d9        4 weeks ago  
 ### Install data archives
 
 The current data archive exists on the Mazama Science server and can be
-installed at `/var/www/html/data/PurpleAir` with:
+installed at `/var/www/html/data/PurpleAir` with the following targets.
+
+They are broken up as individual targets.
 
 ```
-cd ~/AQ-SPEC-documentation; make install_data_archive
+cd ~/AQ-SPEC-documentation
+make install_airsensor_archive
+make install_pas_archive
+make install_pat_archive
+make install_video_archive
 ```
 
 _... This will take some time ..._
 
-### Set up cron jobs
+### Configure Archive URL and crontab
 
-**TODO**
+Data proceessing scripts must have access to an ARCHIVE_BASE_URL. This could
+point to another machine but makes the most sense if it points to this VM.
+
+First, test that Apache and the archive directories have been properly installed 
+by pointing a browser at http://<_ip address_>data/PurpleAir.
+
+If this shows subdirectories for "airsensor", "logs", etc. then save this URL
+
+Edit the `ARCHIVE_BASE_URL` field in `~/AirSensor/local_executables/Makefile`
+with the URL.
+
+The `USER_NAME` variable in this `Makefile` will default to the current user
+because we have just installed the scripts in this users directory.
+
+To configure the executable scripts and crontab files jus type
 
 ```
-cd ~/AirSensor/local_executables; make install
+cd ~/AirSensor/local_executables
+sudo make configure
 ```
 
-Test with:
+### Testing the scripts
+
+The `~/AirSensor/local_executables/test/` directory allows us to test the
+installation up to this point. It has several targets that will run the 
+configured scripts, produciing both output and logs.
+
+Here is an example session:
 
 ```
-crontab -l
+$ sudo make createPAS
+mkdir -p /home/jonathan/AirSensor/local_executables/output
+mkdir -p /home/jonathan/AirSensor/local_executables/logs
+touch /home/jonathan/AirSensor/local_executables/logs/cron_log.txt
+docker run --rm -v /home/jonathan/AirSensor/local_executables:/app -v /home/jonathan/AirSensor/local_executables/output:/app/output -v /home/jonathan/AirSensor/local_executables/logs:/app/logs -w /app mazamascience/airsensor:latest /app/createPAS_exec.R --outputDir=/app/output --logDir=/app/logs >> /home/jonathan/AirSensor/local_executables/logs/cron_log.txt 2>&1 
+$ ls ../logs
+createPAS_DEBUG.log  createPAS_ERROR.log  createPAS_INFO.log  createPAS_TRACE.log  cron_log.txt
+$ cat ../logs/createPAS_INFO.log 
+INFO [2019-09-13 20:38:10] Running createPAS_exec.R version 0.1.6
+INFO [2019-09-13 20:38:11] Obtaining 'pas' data for 20190913
+INFO [2019-09-13 20:39:21] Writing 'pas' data to pas_20190913.rda
+INFO [2019-09-13 20:39:21] Completed successfully!
 ```
 
-# Restarting the Virtual Machine
+### Set up crontab file
 
-Go to https://portal.azure.com and log in.
+To run the scripts on a regular schedule we must uses the `crontab_daily.txt`
+file we configured ealier. There should be no other crontab entries but we
+should check first with:
 
-Click on "Virtual machines"
+```
+cd ~/AirSensor/local_executables
+sudo crontab -l
+```
 
-Select the desired VM and click "Start" or "Restart" in the top bar.
+Assuming this is empty, we can install the daily crontab with:
 
-## Mount external disk
+```
+cd ~/AirSensor/local_executables
+sudo crontab crontab_daily.txt
+```
 
-https://docs.microsoft.com/en-us/azure/virtual-machines/linux/attach-disk-portal
+Test that it is properly installed with:
 
-After selecting the VM, click on "Disks" on the left.
+```
+sudo crontab -l
+```
 
-You should see the ephemeral "OS disk" and also the "Data disk" created earlier.
-If not, then create a new Data disk by repeating the "Add data disk" instructions
-above.
+----
+> Software installation is now complete. 
+----
 
+# Review the Logs
 
+The crontab is set to run multiple scripts per hour, each of which generates
+a log file. The log files are all visible at the URL base, something like:
 
-
-
-
-
+http://40.117.96.252/data/PurpleAir/
 
 
