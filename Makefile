@@ -79,6 +79,20 @@ create_archive_dirs:
 #install_data_archive:
 #	sudo wget --directory-prefix /var/www/html/data/ --no-parent --no-host-directories --cut-dirs=1 --recursive http://smoke.mazamascience.com/data/PurpleAir
 
+install_airsensor_archive:
+	sudo wget --directory-prefix /var/www/html/data/PurpleAir/airsensor --no-clobber --no-parent --no-host-directories --recursive --level=2 --cut-dirs=3 --reject "index.html*" --accept "*.rda" http://smoke.mazamascience.com/data/PurpleAir/airsensor
+
+install_pas_archive:
+	sudo wget --directory-prefix /var/www/html/data/PurpleAir/pas --no-clobber --no-parent --no-host-directories --recursive --level=2 --cut-dirs=3 --reject "index.html*" --accept "*.rda" http://smoke.mazamascience.com/data/PurpleAir/pas
+
+install_pat_archive:
+	sudo wget --directory-prefix /var/www/html/data/PurpleAir/pat --no-clobber --no-parent --no-host-directories --recursive --level=2 --cut-dirs=3 --reject "index.html*" --accept "*.rda" http://smoke.mazamascience.com/data/PurpleAir/pat
+
+install_video_archive:
+	sudo wget --directory-prefix /var/www/html/data/PurpleAir/videos --no-clobber --no-parent --no-host-directories --recursive --level=2 --cut-dirs=3 --reject "index.html*" --accept "*.rda" http://smoke.mazamascience.com/data/PurpleAir/videos
+
+
+
 
 
 
