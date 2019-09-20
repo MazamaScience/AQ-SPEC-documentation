@@ -36,6 +36,13 @@ install_official_docker:
 	# Test
 	###docker --version
 
+# From https://linuxize.com/post/how-to-install-and-use-docker-compose-on-ubuntu-18-04/
+install_docker_compose:
+	sudo curl -L "https://github.com/docker/compose/releases/download/1.23.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+	sudo chmod +x /usr/local/bin/docker-compose
+	# Test
+	###docker-compose --version
+
 # From https://www.digitalocean.com/community/tutorials/how-to-install-the-apache-web-server-on-ubuntu-18-04-quickstart
 install_apache:
 	# Install Apache
@@ -74,7 +81,7 @@ archive_setup: update_repositories install_docker install_apache
 	@echo "Please log out and back in before continuing"
 	@echo ""
 
-shiny_setup: update_repositories install_docker install_apache_shiny
+shiny_setup: update_repositories install_docker install_docker_compose install_apache_shiny
 	@echo ""
 	@echo "All Done!"
 	@echo ""
