@@ -3,9 +3,9 @@ output:
   pdf_document: default
   html_document: default
 ---
-# Microsotf Azure Setup for Data Processing
+# Microsotf Azure Setup for Shiny App
 
-**_Updated 2019-09-13_**
+**_Updated 2019-09-20_**
 
 ## Create a VM From the Web Interface
 
@@ -20,7 +20,7 @@ Click on "Add" or "Create a Virtual Machine"
 * Subscription: Free Trial
 * Resource group: ubuntu_trial (Create new if needed)
 
-* Virtual machine name: UbuntuTrial01
+* Virtual machine name: AirSensorDataViewer01
 * Region: East <required to get the Free Trial>
 * Availaability options: No infrastructure redundancy required
 * Image: Ubuntu Server 18.04 LTS
@@ -46,9 +46,7 @@ Password Alternative:
 * Advanced: Use managed disks -- Yes; Use ephemeral OS disk -- No
 * Data disks: Create and attach a new disk
 
-* Name: UbuntuTrial01_DataDisk_0
-* Source type: None
-* Size: 1023 GiB (Premium SSD)
+No Data disk
 
 Click "OK" button
 
@@ -58,10 +56,10 @@ Click "OK" button
 
 * Virtual network: (new) ubuntu_trial-vnet
 * Subnet: (new) default (10.0.0.0/24)
-* Public IP: (new) UbunutuTrial01-ip
+* Public IP: (new) AirSensorDataViewer01-ip
 * NIC network security group: Basic
 * Public inbound ports: Allow selected ports
-* Select inboundn ports: HTTP, HTTPS, SSH
+* Select inboundn ports: HTTP, SSH
 
 * Accelerated networking: Off
 * Load balancing: No
@@ -96,13 +94,10 @@ Validation passed -- 0.0960 USD/hr
 
 Various things appear:
 
-* UbuntuTrial01 -- virtualMachines
-* ubuntutrial01295 -- networkInterfaces
-* UbuntuTrial01_DataDist_0 -- disks
-* ubuntutrialdiag -- storageAccounts
-* UbuntuTrial01-ip -- publicIpAddresses
-* UbuntuTrial01-nsg -- networkSecurityGroups
-* ubuntu_trial-vnet -- virtualNetworks
+* AirSensorDataViewer01 -- virtualMachines
+* airsensordataviewer0971 -- networkInterfaces
+* AirSensorDataViewer01-nsg -- networkSecurityGroups
+* AirSensorDataViewer01-ip -- publicIpAddresses
 
 When everything is finished: Click "Go to resource"
 
@@ -136,14 +131,17 @@ sudo apt install make
 
 ```
 sudo git clone https://github.com/MazamaScience/AQ-SPEC-documentation.git
-sudo git clone https://github.com/MazamaScience/AirSensor.git
+sudo git clone https://github.com/MazamaScience/AirSensorShiny.git
 ```
 
 ### Set up Docker and Apache
 
+The apache configuration for the Shiny application has a few extra steps not
+needed for the data archive VM.
+
 ```
 cd AQ-SPEC-documentation
-make archive_setup
+make shiny_setup
 ```
 
 At this point you have to log out and back in again for permission settings to
@@ -153,6 +151,17 @@ be updated.
 exit
 ...
 ssh <ip address>
+```
+
+### Configure Apache
+
+Following instructions for Apache here:
+https://support.rstudio.com/hc/en-us/articles/213733868-Running-Shiny-Server-with-a-Proxy
+
+```
+sudo a2enmod proxy
+sudo a2enmod proxy_http
+sudo a2enmod proxy_wstunnel
 ```
 
 ## Mount the Data Disk

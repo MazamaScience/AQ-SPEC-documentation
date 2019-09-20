@@ -44,12 +44,35 @@ install_apache:
 	sudo ufw allow 'Apache'
 	# Test
 	###sudo systemctl status apache2
-	# Set up Virtual Hosts (recommended)
-	# TODO
 	# Start Apache
 	sudo systemctl restart apache2
 
-setup: update_repositories install_docker install_apache
+# From https://support.rstudio.com/hc/en-us/articles/213733868-Running-Shiny-Server-with-a-Proxy
+install_apache_shiny:
+	# Install Apache and dependencies
+	sudo apt --assume-yes install apache2
+	# Adjust the Firewall
+	sudo ufw allow 'Apache'
+	# Update Apache configuration to activate mod-proxy
+	sudo a2enmod proxy
+	sudo a2enmod proxy_http
+	sudo a2enmod proxy_wstunnel
+	# Copy in new 000-default.conf
+	sudo cp shiny_000-default.conf /etc/apache2/sites_enabled/000-default.conf
+	# Test
+	###sudo apachectl configtest
+	###sudo systemctl status apache2
+	# Start Apache
+	sudo systemctl restart apache2
+
+archive_setup: update_repositories install_docker install_apache
+	@echo ""
+	@echo "All Done!"
+	@echo ""
+	@echo "Please log out and back in before continuing"
+	@echo ""
+
+shiny_setup: update_repositories install_docker install_apache_shiny
 	@echo ""
 	@echo "All Done!"
 	@echo ""
