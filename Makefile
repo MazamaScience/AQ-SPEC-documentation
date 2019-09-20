@@ -54,6 +54,8 @@ install_apache_shiny:
 	# Adjust the Firewall
 	sudo ufw allow 'Apache'
 	# Update Apache configuration to activate mod-proxy
+	sudo a2enmod rewrite
+	sudo a2enmod headers
 	sudo a2enmod proxy
 	sudo a2enmod proxy_http
 	sudo a2enmod proxy_wstunnel
