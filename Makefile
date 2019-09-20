@@ -37,8 +37,8 @@ install_official_docker:
 	###docker --version
 
 # From https://linuxize.com/post/how-to-install-and-use-docker-compose-on-ubuntu-18-04/
-install_docker_compose:
-	sudo curl -L "https://github.com/docker/compose/releases/download/1.23.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+install_docker-compose:
+	sudo curl -L "https://github.com/docker/compose/releases/download/1.23.1/docker-compose-Linux-x86_64" -o /usr/local/bin/docker-compose
 	sudo chmod +x /usr/local/bin/docker-compose
 	# Test
 	###docker-compose --version
@@ -81,7 +81,7 @@ archive_setup: update_repositories install_docker install_apache
 	@echo "Please log out and back in before continuing"
 	@echo ""
 
-shiny_setup: update_repositories install_docker install_docker_compose install_apache_shiny
+shiny_setup: update_repositories install_docker install_docker-compose install_apache_shiny
 	@echo ""
 	@echo "All Done!"
 	@echo ""
