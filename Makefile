@@ -58,7 +58,7 @@ install_apache_shiny:
 	sudo a2enmod proxy_http
 	sudo a2enmod proxy_wstunnel
 	# Copy in new 000-default.conf
-	sudo cp shiny_000-default.conf /etc/apache2/sites_enabled/000-default.conf
+	sudo cp shiny_000-default.conf /etc/apache2/sites-enabled/000-default.conf
 	# Test
 	###sudo apachectl configtest
 	###sudo systemctl status apache2
