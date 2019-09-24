@@ -3,7 +3,7 @@ output:
   pdf_document: default
   html_document: default
 ---
-# Microsotf Azure Setup for Shiny App
+# Microsoft Azure Setup for Shiny App
 
 **_Updated 2019-09-20_**
 
