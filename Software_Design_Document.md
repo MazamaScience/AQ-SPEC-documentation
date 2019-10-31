@@ -7,7 +7,7 @@ output:
 ---
 # Software Design Document 
 
-**_Updated 2019-09-03_**
+**_Updated 2019-10-30_**
 
 This document describes the overall design and maintenance of a web accessible
 archive of data from SCAQMD-maintained Purple Air sensors as well as the design
@@ -147,31 +147,41 @@ the host machine in order to run the data ingest scripts described below.
 
 ### Data ingest scripts
 
-The package source code includes a `local_executables/` directory with the
-following contents:
+The data ingest scripts not part of the **AirSensor** R package and live at
+a separate Github URL: 
+https://github.com/MazamaScience/AQ-SPEC-sensor-data-ingest-v1.git
+
+This repository contains the following files:
 
 ```
+├── AQ-SPEC-sensor-data-ingest-v1.Rproj
+├── Makefile
 ├── README.md
-├── createLatestAirSensor_exec.R
-├── createLatestPAT_exec.R
-├── createMonthlyAirSensor_exec.R
-├── createMonthlyPAT_exec.R
-├── createPAS_archival_exec.R
+├── __crontab_daily.txt
+├── createAirSensor_annual_exec.R
+├── createAirSensor_extended_exec.R
+├── createAirSensor_latest_exec.R
 ├── createPAS_exec.R
+├── createPAT_extended_exec.R
+├── createPAT_latest_exec.R
+├── createPAT_monthly_exec.R
 ├── createVideo_exec.R
-├── crontab_archive.txt
-├── crontab_daily.txt
+├── crontab_PAT_monthlyArchive_joule.txt
+├── crontab_daily_joule.txt
+├── docker
+│   └── Makefile
 └── test
     └── Makefile
 ```
 
 Each of the `~_exec.R` scripts is run on a daily schedule defined by
-`crontab_daily.txt`. The `crontab_archive.txt` file can be used to set up
-cron jobs to build up an archive of data files starting in January of 2018.
+`__crontab_daily.txt` file which must be configured before use.  The example 
+crontab `crontab_daily_joule.txt` has paths appropriate for the Mazama Science 
+computer server named `joule`.
 
 To deploy the data ingest scripts, the contents of these files should be 
-modified if necessary to reflect absolute paths on the host machine and then 
-added to a privileged user's crontab so the scripts will be run on a daily basis.
+configured to reflect absolute paths on the host machine and then added to a 
+privileged user's crontab so the scripts will be run on a daily basis.
 
 The `test/` directory contains a `Makefile` that allows someone typing at the
 command line to test the data ingest scripts by running them inside the docker
@@ -190,12 +200,14 @@ directory structure will be available at some web accessible  `archiveBaseUrl`.
 
 ```
 ├── airsensor
+│   ├── 2017
 │   ├── 2018
 │   ├── 2019
 │   └── latest
 ├── pas
 │   └── 2019
 ├── pat
+│   ├── 2017
 │   ├── 2018
 │   ├── 2019
 │   └── latest

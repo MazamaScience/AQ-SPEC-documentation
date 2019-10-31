@@ -5,7 +5,7 @@ output:
 ---
 # Microsotf Azure Setup for Data Processing
 
-**_Updated 2019-09-13_**
+**_Updated 2019-10-30_**
 
 ## Create a VM From the Web Interface
 
@@ -136,7 +136,7 @@ sudo apt install make
 
 ```
 sudo git clone https://github.com/MazamaScience/AQ-SPEC-documentation.git
-sudo git clone https://github.com/MazamaScience/AirSensor.git
+sudo git clone https://github.com/MazamaScience/AQ-SPEC-sensor-data-ingest-v1.git
 ```
 
 ### Set up Docker and Apache
@@ -214,7 +214,7 @@ sudo make create_archive_dirs
 ### Build docker images
 
 ```
-cd ~/AirSensor/docker
+cd ~/AQ-SPEC-sensor-data-ingest-v1/docker
 sudo make production_build
 ```
 
@@ -224,7 +224,7 @@ Test with `docker images`:
 
 ```
 REPOSITORY                 TAG                 IMAGE ID            CREATED             SIZE
-mazamascience/airsensor    0.4.3               675aa990bc1f        2 minutes ago       2.81GB
+mazamascience/airsensor    0.5.8               675aa990bc1f        2 minutes ago       2.81GB
 mazamascience/airsensor    latest              675aa990bc1f        2 minutes ago       2.81GB
 mazamascience/pwfslsmoke   1.2.100             23643a55c6d9        4 weeks ago         2.62GB
 ```
@@ -256,7 +256,7 @@ by pointing a browser at http://<_ip address_>data/PurpleAir.
 
 If this shows subdirectories for "airsensor", "logs", etc. then save this URL
 
-Edit the `ARCHIVE_BASE_URL` field in `~/AirSensor/local_executables/Makefile`
+Edit the `ARCHIVE_BASE_URL` field in `~/AQ-SPEC-sensor-data-ingest-v1/Makefile`
 with the URL.
 
 The `USER_NAME` variable in this `Makefile` will default to the current user
@@ -265,13 +265,13 @@ because we have just installed the scripts in this users directory.
 To configure the executable scripts and crontab files jus type
 
 ```
-cd ~/AirSensor/local_executables
+cd ~/AQ-SPEC-sensor-data-ingest-v1
 sudo make configure
 ```
 
 ### Testing the scripts
 
-The `~/AirSensor/local_executables/test/` directory allows us to test the
+The `~/AQ-SPEC-sensor-data-ingest-v1/test/` directory allows us to test the
 installation up to this point. It has several targets that will run the 
 configured scripts, produciing both output and logs.
 
@@ -279,10 +279,10 @@ Here is an example session:
 
 ```
 $ sudo make createPAS
-mkdir -p /home/jonathan/AirSensor/local_executables/output
-mkdir -p /home/jonathan/AirSensor/local_executables/logs
-touch /home/jonathan/AirSensor/local_executables/logs/cron_log.txt
-docker run --rm -v /home/jonathan/AirSensor/local_executables:/app -v /home/jonathan/AirSensor/local_executables/output:/app/output -v /home/jonathan/AirSensor/local_executables/logs:/app/logs -w /app mazamascience/airsensor:latest /app/createPAS_exec.R --outputDir=/app/output --logDir=/app/logs >> /home/jonathan/AirSensor/local_executables/logs/cron_log.txt 2>&1 
+mkdir -p /home/jonathan/AQ-SPEC-sensor-data-ingest-v1/output
+mkdir -p /home/jonathan/AQ-SPEC-sensor-data-ingest-v1/logs
+touch /home/jonathan/AQ-SPEC-sensor-data-ingest-v1/logs/cron_log.txt
+docker run --rm -v /home/jonathan/AQ-SPEC-sensor-data-ingest-v1:/app -v /home/jonathan/AQ-SPEC-sensor-data-ingest-v1/output:/app/output -v /home/jonathan/AQ-SPEC-sensor-data-ingest-v1/logs:/app/logs -w /app mazamascience/airsensor:latest /app/createPAS_exec.R --outputDir=/app/output --logDir=/app/logs >> /home/jonathan/AQ-SPEC-sensor-data-ingest-v1/logs/cron_log.txt 2>&1 
 $ ls ../logs
 createPAS_DEBUG.log  createPAS_ERROR.log  createPAS_INFO.log  createPAS_TRACE.log  cron_log.txt
 $ cat ../logs/createPAS_INFO.log 
@@ -299,14 +299,14 @@ file we configured ealier. There should be no other crontab entries but we
 should check first with:
 
 ```
-cd ~/AirSensor/local_executables
+cd ~/AQ-SPEC-sensor-data-ingest-v1
 sudo crontab -l
 ```
 
 Assuming this is empty, we can install the daily crontab with:
 
 ```
-cd ~/AirSensor/local_executables
+cd ~/AQ-SPEC-sensor-data-ingest-v1
 sudo crontab crontab_daily.txt
 ```
 
