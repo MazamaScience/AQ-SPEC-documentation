@@ -118,7 +118,7 @@ install_pat_archive:
 	sudo wget --directory-prefix /var/www/html/data/PurpleAir/pat --no-clobber --no-parent --no-host-directories --recursive --level=2 --cut-dirs=3 --reject "index.html*" --accept "*.rda" http://smoke.mazamascience.com/data/PurpleAir/pat
 
 install_video_archive:
-	sudo wget --directory-prefix /var/www/html/data/PurpleAir/videos --no-clobber --no-parent --no-host-directories --recursive --level=2 --cut-dirs=3 --reject "index.html*" --accept "*.rda" http://smoke.mazamascience.com/data/PurpleAir/videos
+	sudo wget --directory-prefix /var/www/html/data/PurpleAir/videos --no-clobber --no-parent --no-host-directories --recursive --level=2 --cut-dirs=3 --reject "index.html*" --accept "*.mp4" http://smoke.mazamascience.com/data/PurpleAir/videos
 
 
 

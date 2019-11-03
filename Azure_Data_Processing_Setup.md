@@ -5,7 +5,7 @@ output:
 ---
 # Microsotf Azure Setup for Data Processing
 
-**_Updated 2019-10-30_**
+**_Updated 2019-11-03_**
 
 ## Create a VM From the Web Interface
 
@@ -22,7 +22,7 @@ Click on "Add" or "Create a Virtual Machine"
 
 * Virtual machine name: UbuntuTrial01
 * Region: East <required to get the Free Trial>
-* Availaability options: No infrastructure redundancy required
+* Availability options: No infrastructure redundancy required
 * Image: Ubuntu Server 18.04 LTS
 * Size: Standard D2s v3 (2 vcpus, 8GiB memory)
 
@@ -224,9 +224,8 @@ Test with `docker images`:
 
 ```
 REPOSITORY                 TAG                 IMAGE ID            CREATED             SIZE
-mazamascience/airsensor    0.5.8               675aa990bc1f        2 minutes ago       2.81GB
+mazamascience/airsensor    0.5.10              675aa990bc1f        2 minutes ago       2.81GB
 mazamascience/airsensor    latest              675aa990bc1f        2 minutes ago       2.81GB
-mazamascience/pwfslsmoke   1.2.100             23643a55c6d9        4 weeks ago         2.62GB
 ```
 
 ### Install data archives
@@ -248,24 +247,25 @@ _... This will take some time ..._
 
 ### Configure Archive URL and crontab
 
-Data proceessing scripts must have access to an ARCHIVE_BASE_URL. This could
-point to another machine but makes the most sense if it points to this VM.
-
-First, test that Apache and the archive directories have been properly installed 
-by pointing a browser at http://<_ip address_>data/PurpleAir.
-
-If this shows subdirectories for "airsensor", "logs", etc. then save this URL
-
-Edit the `ARCHIVE_BASE_URL` field in `~/AQ-SPEC-sensor-data-ingest-v1/Makefile`
-with the URL.
-
-The `USER_NAME` variable in this `Makefile` will default to the current user
-because we have just installed the scripts in this users directory.
-
-To configure the executable scripts and crontab files jus type
+Data processing scripts and configuration take place in this directory:
 
 ```
 cd ~/AQ-SPEC-sensor-data-ingest-v1
+```
+
+Data proceessing scripts place data in directories arelative to an overall
+`ARCHIVE_BASE_DIR`. All installation up to this point assumes this directory
+will be `/var/www/html/data/PurpleAir/` and this directory is configured in
+the `Makefile`.
+
+
+The `EXEC_DIR` variable in this `Makefile` must also be configured with the
+absolute path to `~/AQ-SPEC-sensor-data-ingest-v1`.
+
+Once these adjustments to the `Makefile` have been made, configure the 
+executable scripts and crontab files with:
+
+```
 sudo make configure
 ```
 
@@ -290,6 +290,12 @@ INFO [2019-09-13 20:38:10] Running createPAS_exec.R version 0.1.6
 INFO [2019-09-13 20:38:11] Obtaining 'pas' data for 20190913
 INFO [2019-09-13 20:39:21] Writing 'pas' data to pas_20190913.rda
 INFO [2019-09-13 20:39:21] Completed successfully!
+```
+
+A full test suite can be run with:
+
+```
+sudo make full_test_suite
 ```
 
 ### Set up crontab file
