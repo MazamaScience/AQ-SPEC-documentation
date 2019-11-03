@@ -3,7 +3,7 @@ output:
   pdf_document: default
   html_document: default
 ---
-# Microsotf Azure Setup for Shiny App
+# Microsoft Azure Setup for Shiny App
 
 **_Updated 2019-09-20_**
 
@@ -22,7 +22,7 @@ Click on "Add" or "Create a Virtual Machine"
 
 * Virtual machine name: AirSensorDataViewer01
 * Region: East <required to get the Free Trial>
-* Availaability options: No infrastructure redundancy required
+* Availability options: No infrastructure redundancy required
 * Image: Ubuntu Server 18.04 LTS
 * Size: Standard D2s v3 (2 vcpus, 8GiB memory)
 
@@ -70,7 +70,7 @@ Click "OK" button
 
 * Boot diagnostics: On
 * OS guest diagnostics: Off
-* Diagnosstics storage account: ubuntutrialdiag
+* Diagnostics storage account: ubuntutrialdiag
 * Identify: Off
 * Azure Active Directory: Off
 * Auto-shutdown: Off
