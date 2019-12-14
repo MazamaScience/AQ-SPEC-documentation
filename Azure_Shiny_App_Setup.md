@@ -5,7 +5,7 @@ output:
 ---
 # Microsoft Azure Setup for Shiny App
 
-**_Updated 2019-09-20_**
+**_Updated 2019-12-14_**
 
 ## Create a VM From the Web Interface
 
@@ -177,7 +177,7 @@ Test with `docker images`:
 REPOSITORY                     TAG                 IMAGE ID            CREATED              SIZE
 airsensor-shiny-test           0.5.1               914b353e1f51        About a minute ago   2.78GB
 airsensor-shiny-test           latest              914b353e1f51        About a minute ago   2.78GB
-mazamascience/airsensorshiny   1.3.6               46d13146c943        22 hours ago         2.78GB
+mazamascience/airsensorshiny   1.3.7               46d13146c943        22 hours ago         2.78GB
 ```
 
 ### Start the Shiny server

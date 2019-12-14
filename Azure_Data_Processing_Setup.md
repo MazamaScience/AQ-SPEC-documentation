@@ -5,7 +5,7 @@ output:
 ---
 # Microsotf Azure Setup for Data Processing
 
-**_Updated 2019-11-03_**
+**_Updated 2019-12-14_**
 
 ## Create a VM From the Web Interface
 
@@ -211,23 +211,6 @@ cd ~/AQ-SPEC-documentation
 sudo make create_archive_dirs
 ```
 
-### Build docker images
-
-```
-cd ~/AQ-SPEC-sensor-data-ingest-v1/docker
-sudo make production_build
-```
-
-_... This will take some time ..._
-
-Test with `docker images`:
-
-```
-REPOSITORY                 TAG                 IMAGE ID            CREATED             SIZE
-mazamascience/airsensor    0.5.10              675aa990bc1f        2 minutes ago       2.81GB
-mazamascience/airsensor    latest              675aa990bc1f        2 minutes ago       2.81GB
-```
-
 ### Install data archives
 
 The current data archive exists on the Mazama Science server and can be
@@ -244,6 +227,23 @@ make install_video_archive
 ```
 
 _... This will take some time ..._
+
+### Build docker images
+
+```
+cd ~/AQ-SPEC-sensor-data-ingest-v1/docker
+sudo make production_build
+```
+
+_... This will take some time ..._
+
+Test with `docker images`:
+
+```
+REPOSITORY                 TAG                 IMAGE ID            CREATED             SIZE
+mazamascience/airsensor    0.5.16              675aa990bc1f        2 minutes ago       2.81GB
+mazamascience/airsensor    latest              675aa990bc1f        2 minutes ago       2.81GB
+```
 
 ### Configure Archive URL and crontab
 
