@@ -11,10 +11,13 @@ output:
 
 The MS Azure VM should be set up with the following features:
 
-* Ubuntu Server 18.04 LTS
+* Ubuntu Server 18.04 LTS with >= 20GB of disk
 * Utilities: `make`, `vim` and `git`
-* Apache with /var/www/html/ as the root directory
+* Apache with `/var/www/html/` as the server root
 * Docker
+
+Dockerized scripts will write data and logs to `/var/www/html/logs/` and
+`/var/www/html/Purpleair/v1` which must be open to the web.
 
 ## Set up Data Processing
 
@@ -27,7 +30,7 @@ make -f AQ-SPEC-sensor-data-ingest-v1/Makefile install
 > Software installation is now complete. 
 ----
 
-# Review the Logs
+## Review the Logs
 
 The crontab is set to run multiple scripts per hour, each of which generates
 a log file. The generated data and associated log files are all visible at the 
