@@ -7,10 +7,10 @@ output:
 ---
 # Software Design Document 
 
-**_Updated 2019-10-30_**
+**_Updated 2020-11-10_**
 
 This document describes the overall design and maintenance of a web accessible
-archive of data from SCAQMD-maintained Purple Air sensors as well as the design
+archive of data from SCAQMD-maintained PurpleAir sensors as well as the design
 and deployment of an [R Shiny application](https://shiny.rstudio.com) providing 
 web accessible products and user interfaces appropriate for dissemination to the 
 public.
@@ -23,8 +23,8 @@ at the [South Coast Air Quality Managment District](http://www.aqmd.gov).
 
 The overall system consists of the following modular components:
  
- * an R package providing core functionality for working with Purple Air data
- * data ingest scripts for automatically processing raw Purple Air data into
+ * an R package providing core functionality for working with PurpleAir data
+ * data ingest scripts for automatically processing raw PurpleAir data into
  higher level data archive files
  * a directory structure providing an API for accessing data archive files
  * an R Shiny application providing a public facing user interface to Purple 
@@ -42,42 +42,42 @@ which is proxied through Apache.
 Both the archive scripts and the R Shiny Server are run inside docker containers
 so that host machine provisioning is limited to: `apache`, `git` and `docker`.
 
-As envisioned, data ingest, data archive and R Shiny Server could all run on a
+As designed, data ingest, data archive and R Shiny Server _could_ all run on a
 single, SCAQMD maintained, Microsoft Azure instance. However, for purposes of
 load and process optimization, it is recommended that the data processing and 
 data archive be set up one one Azure instance while the public interface be set 
 up on a separate Azure instance.
 
 Data processing is of critical imprtance and will occur at well defined
-intervals so that it may be possible configure an instance tailored to the CPU
-and memory needs of these proceses.
+intervals so that it may be possible to configure an instance tailored to the
+CPU and memory needs of these proceses.
 
 The public facing user interface is by nature much more volatile in terms of its
 CPU load and should be set up so as not to interfere with the core data
 processing tasks.
 
-That said, a single, medium capacity instance may be able to handle both 
+That said, a single, medium capacity instance _might_ be able to handle both 
 tasks under low user load situations.
 
 ## Data flow
 
 Files in the data archive contain data at three distinct levels:
 
-* _synoptic data_ containing primarily sensor metadata for every Purple Air sensor
-* _time series data_ containing raw Purple Air sensor data
+* _synoptic data_ containing primarily sensor metadata for every PurpleAir sensor
+* _time series data_ containing raw PurpleAir sensor data
 * _hourly aggregated data_ containing processed time series data
 * _video files_ contianing 7-day mp4 files for each distinct _community_
 
 Data ingest begins by downloading, parsing and enhancing data found in a geojson
 file at https://www.purpleair.com/json. Data ingest is performed hourly by a 
 dedicated data ingest script run by a cron job. The synoptic data files are
-referred to as `pas` (Purple Air Synoptic) files.
+referred to as `pas` (PurpleAir Synoptic) files.
 
 In the second stage of data processing, metadata from the synoptic file is used 
 to download, parse and enhance raw timeseries data obtained from the 
 ThingSpeak server at https://api.thingspeak.com/channels/. This data processing 
 is performed hourly by a data processing script. The timeseries
-data files are referred to as `pat` (Purple Air Timeseries) files.
+data files are referred to as `pat` (PurpleAir Timeseries) files.
 
 A more detailed discussion of raw data access APIs is available at:
 https://www2.purpleair.com/community/faq.
@@ -85,7 +85,7 @@ https://www2.purpleair.com/community/faq.
 The third stage of data processing involves ingesting timeseries data from
 the SCAQMD archive and creating quality controlled, hourly aggregated data
 files containing all sensor data in a single file. The files are compatible
-with the **PWFSLSmoke** package and allow for comparison
+with the **PWFSLSmoke** R package and allow for comparison
 with federal monitoring data. This data processing is again performed by a
 dedicated processing script run hourly by a cron job. The hourly aggregated
 data files are referred to as `airsensor` files.
@@ -103,17 +103,15 @@ important in assessing and communicating air sensor data.
 
 The R package source code is available at 
 https://github.com/MazamaScience/AirSensor
-and is fully documented with package documentation and specific articles
-formatted for the web. **_(Web accessible documentation will be available as soon
-as the source code is made public. Mazama Science believes the code is ready
-to be made public.)_**
+and is with a companion 
+[documentation website](https://mazamascience.github.io/AirSensor/). 
 
 The **AirSensor** R package provides all of the component functionality from
 which data ingest scripts and user interfaces are built.
 
 Using the open source version of the
 [RStudio](https://www.rstudio.com/products/rstudio/) IDE, the package can be
-loaded and used by data analysists to work with Purple Air data on their 
+loaded and used by data analysists to work with PurpleAir data on their 
 desktop and laptop machines.
 
 ### Docker containers
@@ -151,31 +149,32 @@ The data ingest scripts not part of the **AirSensor** R package and live at
 a separate Github URL: 
 https://github.com/MazamaScience/AQ-SPEC-sensor-data-ingest-v1.git
 
-This repository contains the following files:
+This repository contains the following files and directories:
 
 ```
-├── AQ-SPEC-sensor-data-ingest-v1.Rproj
+├── Digital_Ocean_Primer.md
 ├── Makefile
+├── R/
 ├── README.md
-├── __crontab_daily.txt
 ├── createAirSensor_annual_exec.R
 ├── createAirSensor_extended_exec.R
 ├── createAirSensor_latest_exec.R
+├── createAirSensor_monthly_exec.R
 ├── createPAS_exec.R
 ├── createPAT_extended_exec.R
 ├── createPAT_latest_exec.R
 ├── createPAT_monthly_exec.R
 ├── createVideo_exec.R
-├── crontab_PAT_monthlyArchive_joule.txt
-├── crontab_daily_joule.txt
-├── docker
-│   └── Makefile
-└── test
-    └── Makefile
+├── createVideo_monthly_exec.R
+├── crontabs_etc/
+├── docker/
+├── test/
+└── upgradePAS_exec.R
 ```
 
-Each of the `~_exec.R` scripts is run on a daily schedule defined by
-`__crontab_daily.txt` file which must be configured before use.  The example 
+Each of the `~_exec.R` scripts is run on a regular schedule defined by
+crontabs in the `crontabs_etc/` directory. These crontabs must be configured 
+before use to reflect directory locations on the host server.  The example 
 crontab `crontab_daily_joule.txt` has paths appropriate for the Mazama Science 
 computer server named `joule`.
 
@@ -185,17 +184,17 @@ privileged user's crontab so the scripts will be run on a daily basis.
 
 The `test/` directory contains a `Makefile` that allows someone typing at the
 command line to test the data ingest scripts by running them inside the docker
-container and checking the results. This should be done before setting up the
-cron job to run scripts automatically.
+container and then checking the results. This should be done before setting up
+the cron job to run scripts automatically.
 
 ### Data directory
 
 The data archive is a flat-file archive system using R binary files 
-containing Purple Air data. The API to this data archive consists of carefully
+containing PurpleAir data. The API to this data archive consists of carefully
 named files in predictable directory locations. Besides the operating system, no 
 other "database" is required.
 
-R package functions inside the **AirSensor** package assume the following 
+Functions inside the **AirSensor** R package assume the following 
 directory structure will be available at some web accessible  `archiveBaseUrl`.
 
 ```
@@ -203,17 +202,21 @@ directory structure will be available at some web accessible  `archiveBaseUrl`.
 │   ├── 2017
 │   ├── 2018
 │   ├── 2019
+│   ├── 2020
 │   └── latest
 ├── pas
-│   └── 2019
+│   ├── 2019
+│   └── 2020
 ├── pat
 │   ├── 2017
 │   ├── 2018
 │   ├── 2019
+│   ├── 2020
 │   └── latest
 └── videos
     ├── 2018
-    └── 2019
+    ├── 2019
+    └── 2020
 ```
 
 The `pas` files are generated every hour with file names similar to:
@@ -225,27 +228,31 @@ pas/2019/pas_20190628.rda
 pas/2019/pas_20190628_archival.rda
 ```
 
-Each file contains synoptic data for all US Purple Air sensors reporting for
+Each file contains synoptic data for all US PurpleAir sensors reporting for
 a given `YYYYmmdd` timestamp. These files contain metadata for all sensors that
 have reported within the last 24 hours. The files with `_archival` contain
 metadata for all sensors including those that have stopped reporting.
 
 The `pat` files are generated once per day for each individual SCAQMD sensor
-and contain data for an entire month. They have file names like:
+and contain data for an entire month. They have file names built as
+`pat_<locationID>_<instrumentID>_YYYYmm.rda`:
 
 ```
-pat/2019/pat_SCAH_04_201901.rda
-pat/2019/pat_SCAH_05_201901.rda
-pat/2019/pat_SCAH_07_201901.rda
+pat/2020/11/pat_048b4e4419f084d5_2303_202011.rda
+pat/2020/11/pat_0532adaf3cd5d7d2_2309_202011.rda
+pat/2020/11/pat_055497925c615bbd_2452_202011.rda
 ```
 
 The `pat/latest/` subdirectory contains files that are updated hourly and contain 
-one week of data per sensor. The have file names like:
+7 days or 45 days of data per sensor. The have file names like:
 
 ```
-pat/latest/pat_SCAH_04_latest7.rda
-pat/latest/pat_SCAH_05_latest7.rda
-pat/latest/pat_SCAH_07_latest7.rda
+pat/latest/pat_048b4e4419f084d5_2303_latest7.rda
+pat/latest/pat_048b4e4419f084d5_2303_lates45.rda
+pat/latest/pat_0532adaf3cd5d7d2_2309_latest7.rda
+pat/latest/pat_0532adaf3cd5d7d2_2309_latest45.rda
+pat/latest/pat_055497925c615bbd_2452_latest7.rda
+pat/latest/pat_055497925c615bbd_2452_latest45.rda
 ```
 
 The `airsensor` files are generated once per day and contain sensor data for
@@ -253,12 +260,12 @@ an entire month. A single file combines all aggregated timeseries data and
 is named by "collection", in this case "scaqmd":
 
 ```
-airsensor/2019/airsensor_scaqmd_201901.rda
-airsensor/2019/airsensor_scaqmd_201902.rda
-airsensor/2019/airsensor_scaqmd_201903.rda
+airsensor/2020/airsensor_scaqmd_202001.rda
+airsensor/2020/airsensor_scaqmd_202002.rda
+airsensor/2020/airsensor_scaqmd_202003.rda
 ```
 
-The `airsensor/latest` subdirectory contains files that are updated hourly and
+The `airsensor/latest/` subdirectory contains files that are updated hourly and
 contain either 7 or 45 days of data:
 
 ```
@@ -266,20 +273,20 @@ airsensor/latest/airsensor_scaqmd_latest7.rda
 airsensor/latest/airsensor_scaqmd_latest45.rda
 ```
 
-The `createVideo_exec.R` script is run once daily to populate generate 7-day
+The `createVideo_exec.R` script is run once daily to generate 7-day
 videos of hourly sensor data for each community. These are found in the
-`videos` directory with names like:
+`videos/` directory with names like:
 
 ```
-SCAH_20190802.mp4
-SCAH_20190803.mp4
-SCAH_20190804.mp4
+videos/2020/11/SCAH_20201101.mp4
+videos/2020/11/SCAH_20201102.mp4
+videos/2020/11/SCAH_20201103.mp4
 ```
 
 ### R Shiny application
 
 A full-featured, web based user interface was created allowing end users to generate 
-plots of recent data for specific Purple Air sensors. Our technology of choice
+plots of recent data for specific PurpleAir sensors. Our technology of choice
 was to build an [R Shiny](https://www.rstudio.com/products/shiny/) application
 and to host it using [R Shiny Server](https://www.rstudio.com/products/shiny-2/).
 
@@ -288,7 +295,7 @@ currently enjoying widespread adoption by many members of the R/data analysis
 community.
 
 The shiny application is not part of the **AirSensor** R package and lives at
-its own Github URL: https://github.com/MazamaScience/AirSensorShiny
+its own Github URL: https://github.com/MazamaScience/AirSensorDataViewer
 
 This repository contains its own `README.md`, `Makefile` and `docker/` directory
 as well as all necessary source code to build and deploy the application.
@@ -307,14 +314,14 @@ https://support.rstudio.com/hc/en-us/articles/213733868-Running-Shiny-Server-wit
 ## Interfaces
 
 Within the Shiny application, interfaces are defined by the User Interface
-specification defined in `AirSensorShiny/app/ui.R`.
+specification defined in `https://github.com/MazamaScience/AirSensorDataViewer/blob/master/R/app_ui.R`.
 
 API's to flat file data products are defined by the following naming schemes:
 
 * pas -- `pas/<YYYY>/pas_<YYYYmmdd>.rda`
-* pat -- `pat/<YYYY>/pat_<label>_<YYYYmm>.rda`
+* pat -- `pat/<YYYY>/<mm>/pat_<uniqueID>_<YYYYmm>.rda`
 * airsensor -- `airsensor/<YYYY>/airsensor_scaqmd_<YYYYmm>.rda`
-* video -- `videos/<YYYY>/<community>_<YYYYmmdd>.mp4`
+* video -- `videos/<YYYY>/<mm>/<community>_<YYYYmmdd>.mp4`
 
 ## Security
 

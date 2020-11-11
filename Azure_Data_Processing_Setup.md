@@ -253,7 +253,7 @@ Data processing scripts and configuration take place in this directory:
 cd ~/AQ-SPEC-sensor-data-ingest-v1
 ```
 
-Data proceessing scripts place data in directories arelative to an overall
+Data proceessing scripts place data in directories are relative to an overall
 `ARCHIVE_BASE_DIR`. All installation up to this point assumes this directory
 will be `/var/www/html/data/PurpleAir/` and this directory is configured in
 the `Makefile`.
