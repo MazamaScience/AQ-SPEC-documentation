@@ -1,10 +1,3 @@
----
-output:
-  pdf_document: 
-    latex_engine: xelatex
-  word_document: default
-  html_document: default
----
 # Software Design Document 
 
 **_Updated 2020-11-10_**
