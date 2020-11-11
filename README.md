@@ -1,6 +1,6 @@
 # Internal Documentation for AQ-SPEC
 
-**_Updated 2019-09-13_**
+**_Updated 2020-11-11_**
 
 This repository contains documents related to the project titled:
 
@@ -13,16 +13,11 @@ to reflect changes in the software and so that all changes can be tracked.
 
 Current contents include:
 
+* [Azure_Data_Processing_Setup.md](Azure_Data_Processing_Setup.md) -- 
+Detailed deployment instructions for the data processing/data archive component, 
+targeted to a Microsoft Azure instance
 * [README.md](README.md) -- 
-this document
+This document
 * [Software_Design_Document.md](Software_Design_Document.md) -- 
 Overview of software system components
-* [Azure_Data_Processing_Setup.md](Azure_Data_Processing_Setup.md) -- 
-detailed deployment instructions for the data processing/data archive
-component, targeted to a Microsoft Azure instance
-* [Azure_Shiny_App_Setup.md](Azure_Shiny_App_Setup.md) -- 
-detailed deployment instructions for the R Shiny application,
-targeted to a Microsoft Azure instance
-* [Windows_Installation.md](Windows_Installation.md) -- 
-Instructions for setting up RStudio and the **AirSensor** R package on Windows.
 
