@@ -3,11 +3,13 @@ output:
   pdf_document: default
   html_document: default
 ---
-# Microsotf Azure Setup for Data Processing
+# Microsotf Azure Data Processing Setup
 
 **_Updated 2020-11-11_**
 
 ## Set up the VM
+
+Example setup instructions are found in [Azure_VM_Setup_DB.md](Azure_VM_Setup_DP.md).
 
 The MS Azure VM should be set up with the following features:
 
