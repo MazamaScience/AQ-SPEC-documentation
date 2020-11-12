@@ -12,6 +12,7 @@ output:
 The MS Azure VM should be set up with the following features:
 
 * Ubuntu Server 18.04 LTS with >= 20GB of disk
+* External disk or backup so that data archives survive a reboot
 * Utilities: `make`, `vim` and `git`
 * Apache with `/var/www/html/` as the server root
 * Docker
