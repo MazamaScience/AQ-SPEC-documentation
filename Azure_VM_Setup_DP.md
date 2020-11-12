@@ -116,7 +116,7 @@ When everything is finished: Click "Go to resource"
 ## Log in to the VM from a terminal
 
 ```
-ssh root@<ip address>
+ssh <ip address>
 ```
 
 ## Mount the Data Disk
