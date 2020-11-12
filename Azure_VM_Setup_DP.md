@@ -113,6 +113,12 @@ When everything is finished: Click "Go to resource"
 > From here on, provisioning takes place inside the instance.
 ----
 
+## Log in to the VM from a terminal
+
+```
+ssh <ip address>
+```
+
 ## Mount the Data Disk
 
 In this step we mount the "Data disk" we created and attached to the VM.
