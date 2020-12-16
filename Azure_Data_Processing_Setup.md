@@ -41,4 +41,17 @@ URL base, something like:
 
 http://<ip-address>/PurpleAir/v1/
 
+## Install Archival Data
+
+Previously generated files are available on the Mazama Science server. These
+can be installed with the following commands:
+
+```
+make -f AQ-SPEC-sensor-data-ingest-v1/Makefile create_archive_dirs
+make -f AQ-SPEC-sensor-data-ingest-v1/Makefile install_airsensor_archive
+make -f AQ-SPEC-sensor-data-ingest-v1/Makefile install_pas_archive
+make -f AQ-SPEC-sensor-data-ingest-v1/Makefile install_pat_archive
+make -f AQ-SPEC-sensor-data-ingest-v1/Makefile install_video_archive
+```
+
 
