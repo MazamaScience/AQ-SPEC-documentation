@@ -68,7 +68,7 @@ To see which months have already been created just look in the archive:
 ls -1 /var/www/html/PurpleAir/v1/videos/2*
 ```
 
-The crontab file to be edited is `crontabs_etc/crontab_video_monthly_archive.txt`.
+The crontab file to be edited is `crontabs_etc/crontab_video_monthlyArchive_DO.txt`.
 
 Inside this file you will see individual crontab lines. _Note that cron does not 
 recognize line continuation characters._ Below, we break up the line for
