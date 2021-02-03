@@ -81,8 +81,9 @@ and should already exist on the MS Azure Data Processing machine:
 ### Video creation crontab
 
 Inside `crontab_video_monthlyArchive_DO.txt` you will see individual crontab lines. _Note that cron does not 
-recognize line continuation characters._ Below, we break up the line for
-easier explanation:
+recognize line continuation characters._ 
+
+Below, we break up the line for easier explanation:
 
 ```
 00 12 13 09 *    
@@ -114,12 +115,12 @@ To see which months have already been populated just look in the archive:
 ls -1 /var/www/html/PurpleAir/v1/videos/2*
 ```
 
-According to Vasieios Papapostolou the archives should cover every month going
+According to Vasieios Papapostolou, the archives should cover every month going
 back to October 2017.
 
 ### Updating `cron`
 
-To modify this file to generate a new month's worth of videos you must do two 
+To modify this crontab to generate a new month's worth of videos you must do two 
 things for each line in the video archive creation section of the crontab:
 
 1. update `--datestamp=202009` to reflect the desired year and month
@@ -128,12 +129,12 @@ things for each line in the video archive creation section of the crontab:
 Edit `cron` as an admin user with `crontab -e`.
 
 _NOTE 1:  Edit the loaded crontab directly if the video creation lines already exist.
-Otherwise, paste in the editd crontab instructions._
+Otherwise, paste in the edited crontab instructions._
 
 _NOTE 2: The crontab on the Data Processing machine is quite large so be sure you 
 are editing only the video creation section._
 
-### REPEAT!
+### _REPEAT!_
 
 The step above needs to be repeated once every few days until the archives have
 been completely populated.
