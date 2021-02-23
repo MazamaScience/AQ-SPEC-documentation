@@ -1,8 +1,3 @@
----
-output:
-  pdf_document: default
-  html_document: default
----
 # Understanding Data Log Files
 
 **_Updated 2021-02-22_**

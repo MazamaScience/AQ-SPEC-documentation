@@ -1,8 +1,3 @@
----
-output:
-  pdf_document: default
-  html_document: default
----
 # Microsotf Azure Virtual Machine Setup for Data Processing
 
 **_Updated 2020-11-12_**

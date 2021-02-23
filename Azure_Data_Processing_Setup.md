@@ -1,8 +1,3 @@
----
-output:
-  pdf_document: default
-  html_document: default
----
 # Microsotf Azure Data Processing Setup
 
 **_Updated 2021-02-02_**
