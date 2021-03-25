@@ -12,6 +12,7 @@ The MS Azure VM should be set up with the following features:
 * Utilities: `make`, `vim` and `git`
 * Apache with `/var/www/html/` as the server root
 * Docker
+* docker-compose
 
 ### Install Mazama Science Repositories
 
