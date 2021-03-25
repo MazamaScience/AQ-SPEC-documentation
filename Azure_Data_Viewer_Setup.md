@@ -17,7 +17,7 @@ The MS Azure VM should be set up with the following features:
 
 ```
 sudo git clone https://github.com/MazamaScience/AQ-SPEC-documentation.git
-sudo git clone https://github.com/MazamaScience/AirSensorShiny.git
+sudo git clone https://github.com/MazamaScience/AirSensorDataViewer.git
 ```
 
 ### Set up Docker and Apache
