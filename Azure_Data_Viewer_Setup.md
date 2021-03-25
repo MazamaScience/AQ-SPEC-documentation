@@ -53,7 +53,7 @@ installed and run with targets in `AirSensorShiny/Makefile`.
 First we need to build the base image
 
 ```
-cd ~/AirSensorShiny
+cd ~/AirSensorDataViewer
 sudo make test_build
 ```
 
