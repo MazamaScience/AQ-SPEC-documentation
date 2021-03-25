@@ -82,19 +82,23 @@ make test_up
 > Software installation is now complete. 
 ----
 
+################################################################################
+# TODO:  CONTINUE HERE
+################################################################################
+
 # Testing
 
 ## Test Apache
 
 You should see a default Apache welcome page at:
 
-http://52.168.86.10/
+http://<ip_address>/
 
 ## Test the Shiny Server
 
 You should see a simple page with a single link to 
 
-http://52.168.86.10/shiny-test/
+http://<ip_address>:6709/asdv/test/
 
 *Note that the final '/' is currently required*
 
