@@ -1,4 +1,4 @@
-# Microsotf Azure Data Processing Setup
+# Microsoft Azure Data Processing Setup
 
 **_Updated 2021-02-02_**
 
