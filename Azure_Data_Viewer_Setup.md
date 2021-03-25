@@ -30,7 +30,8 @@ to names, etc. Then install docker and apache with.
 
 ```
 cd AQ-SPEC-documentation
-make shiny_setup
+make install_docker-compose
+make install_apache_shiny
 ```
 
 At this point you have to log out and back in again for permission settings to
