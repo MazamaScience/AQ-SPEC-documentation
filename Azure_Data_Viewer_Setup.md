@@ -1,6 +1,6 @@
 # Microsotf Azure Data Viewer Setup
 
-**_Updated 2021-03-25_**
+**_Updated 2021-04-21_**
 
 ## Set up the VM
 
@@ -11,7 +11,7 @@ The MS Azure VM should be set up with the following features:
 * Ubuntu Server 18.04 LTS with >= 20GB of disk
 * Utilities: `make`, `vim` and `git`
 * Apache with `/var/www/html/` as the server root
-* Docker
+* docker
 * docker-compose
 
 ### Install Mazama Science Repositories
@@ -62,10 +62,10 @@ _... This will take some time ..._
 Test with `docker images`:
 
 ```
-REPOSITORY                     TAG                 IMAGE ID            CREATED              SIZE
-airsensor-shiny-test           0.5.1               914b353e1f51        About a minute ago   2.78GB
-airsensor-shiny-test           latest              914b353e1f51        About a minute ago   2.78GB
-mazamascience/airsensorshiny   1.3.7               46d13146c943        22 hours ago         2.78GB
+REPOSITORY                                TAG       IMAGE ID       CREATED          SIZE
+airsensor-dataviewer-test                 1.0.7     3323ed92a6bb   14 minutes ago   3.26GB
+airsensor-dataviewer-test                 latest    3323ed92a6bb   14 minutes ago   3.26GB
+mazamascience/airsensor-dataviewer-base   1.0.5     6290f3ce53a7   4 months ago     3.15GB
 ```
 
 ### Start the Shiny server
@@ -74,8 +74,14 @@ The `Makefile` has a couple of targets for starting, stopping and bouncing
 the Shiny server. Start it up initially with:
 
 ```
-cd ~/AirSensorShiny
+cd ~/AirSensorDataViewer
 make test_up
+```
+
+### Open up permissions in the log directory 
+
+```
+sudo chmod 777  /var/www/html/logs/airsensor-dataviewer/test/app
 ```
 
 ----
@@ -90,33 +96,27 @@ make test_up
 
 ## Test Apache
 
-You should see a default Apache welcome page at:
-
 http://<ip_address>/
 
-## Test the Shiny Server
+You should see a default Apache welcome page.
 
-You should see a simple page with a single link to 
+## Test the Data Viewer
 
 http://<ip_address>:6709/asdv/test/
 
+After a few moments, you should see the DataViewer user interface version 1.0.7. 
+
 *Note that the final '/' is currently required*
-
-## Test the Shiny Application
-
-The application itself will appear at:
-
-http://52.168.86.10/airsensor-test/app/
 
 ## Log Files
 
 Log files are written to the directory specified by `volumes:` in
-`~/AirSensorShiny/docker-compose-test.yml`.
+`~/docker/docker-compose-test.yml `.
 
 By default this configured to be `/var/www/html/logs` and these logs files will
 be visible at:
 
-http://52.168.86.10/logs
+http://52.168.86.10/logs/airsensor-dataviewer/test/app/
 
 
 
