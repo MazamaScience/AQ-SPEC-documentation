@@ -88,10 +88,6 @@ sudo chmod 777  /var/www/html/logs/airsensor-dataviewer/test/app
 > Software installation is now complete. 
 ----
 
-################################################################################
-# TODO:  CONTINUE HERE
-################################################################################
-
 # Testing
 
 ## Test Apache
@@ -119,6 +115,33 @@ be visible at:
 http://52.168.86.10/logs/airsensor-dataviewer/test/app/
 
 
+# Apache configuration
 
+It is desirable to redirect the default Apache welcome page to the Data Viewer.
+This is accomplished with standard Apache configuration.
 
+## Ubuntu
 
+Edit `/etc/apache2/sites-available/000-default.conf` to include the following:
+
+```
+  ...
+  # Redirect from root to Data Viewer app ------------------------------------
+  Redirect 301 / http://<ip_address>:6709/asdv/test/
+
+  # Shiny related settings below here ----------------------------------------
+  #
+  ...
+```
+
+Then just restart Apache with:
+
+```
+sudo service apache2 restart
+```
+
+Alternatively, you could create an alternative html page and copy it to:
+
+```
+/var/www/html/index.html
+```
