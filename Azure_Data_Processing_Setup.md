@@ -1,6 +1,6 @@
 # Microsoft Azure Data Processing Setup
 
-**_Updated 2021-02-02_**
+**_Updated 2023-04-07_**
 
 ## Set up the VM
 
@@ -8,11 +8,11 @@ Example setup instructions are found in [Azure_VM_Setup_DB.md](Azure_VM_Setup_DP
 
 The MS Azure VM should be set up with the following features:
 
-* Ubuntu Server 18.04 LTS with >= 20GB of disk
-* External disk or backup so that data archives survive a reboot
-* Utilities: `make`, `vim` and `git`
-* Apache with `/var/www/html/` as the server root
-* Docker
+- Ubuntu Server 18.04 LTS with >= 20GB of disk
+- External disk or backup so that data archives survive a reboot
+- Utilities: `make`, `vim` and `git`
+- Apache with `/var/www/html/` as the server root
+- Docker
 
 Dockerized scripts will write data and logs to `/var/www/html/logs/` and
 `/var/www/html/Purpleair/v1` which must be open to the web.
@@ -24,35 +24,24 @@ git clone https://github.com/MazamaScience/AQ-SPEC-sensor-data-ingest-v1.git
 make -f AQ-SPEC-sensor-data-ingest-v1/Makefile install
 ```
 
-----
-> Software installation is now complete. 
-----
+---
+
+> Software installation is now complete.
+
+---
 
 ## Review the Logs
 
 The crontab is set to run multiple scripts per hour, each of which generates
-a log file. The generated data and associated log files are all visible at the 
+a log file. The generated data and associated log files are all visible at the
 URL base, something like:
 
 http://<ip-address>/PurpleAir/v1/
 
-## Install Archival Data
+## Archival Data
 
-Previously generated files are available on the Mazama Science server. These
-can be installed with the following commands:
-
-```
-make -f AQ-SPEC-sensor-data-ingest-v1/Makefile create_archive_dirs
-make -f AQ-SPEC-sensor-data-ingest-v1/Makefile install_airsensor_archive
-make -f AQ-SPEC-sensor-data-ingest-v1/Makefile install_pas_archive
-make -f AQ-SPEC-sensor-data-ingest-v1/Makefile install_pat_archive
-make -f AQ-SPEC-sensor-data-ingest-v1/Makefile install_video_archive
-```
-
-## Build video archive
-
-See the [video archive instructions](./Video_Archive.md) for instructions on
-setting up cron jobs to build the archive of community videos.
+_NOTE: No archival data is available because no PAS or PAT files were generated
+between May, 2022 and April 2023._
 
 # Apache configuration
 
