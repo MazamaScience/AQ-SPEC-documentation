@@ -15,13 +15,28 @@ The MS Azure VM should be set up with the following features:
 - Docker
 
 Dockerized scripts will write data and logs to `/var/www/html/logs/` and
-`/var/www/html/Purpleair/v1` which must be open to the web.
+`/var/www/html/PurpleAir/v1` which must be open to the web.
 
 ## Set up Data Processing
 
 ```
 git clone https://github.com/MazamaScience/AQ-SPEC-sensor-data-ingest-v1.git
 make -f AQ-SPEC-sensor-data-ingest-v1/Makefile install
+```
+
+## Set up global_vars.R
+
+The API read key from PurpleAir needs to be added to a file by hand. This file
+should **not** be part of the Github repository.
+
+The file will live at `AQ-SPEC-sensor-data-ingest-v1/global_vars.R' and will
+look like this:
+
+```
+# ----- PurpleAir API keys ----------------------------------------------------
+
+PURPLE_AIR_API_READ_KEY <- "********-2A00-11EB-A8CD-42010A800126"     # associated account email
+PURPLE_AIR_API_WRITE_KEY <- "********-2A00-11EB-A8CD-42010A800126"    # associated account email
 ```
 
 ---
